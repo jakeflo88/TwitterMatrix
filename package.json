@@ -1,0 +1,19 @@
+{
+  "name": "TwitterMatrix",
+  "version": "1.0.0",
+  "description": "Enter the Matrix of Twitter",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jakeflo88/TwitterMatrix.git"
+  },
+  "author": "Jake Florian",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jakeflo88/TwitterMatrix/issues"
+  },
+  "homepage": "https://github.com/jakeflo88/TwitterMatrix"
+}
