@@ -3,8 +3,6 @@ var tweetLog = [];
 var columns = ["a","b","c","d","e","f","g","h","i","j","k","l"];
 var colActive = 0;
 
-var busy = [true, false, false, false, false, false, false, false, false, false, false, false];
-
 if (search != null) {
 	socket.emit('enter', search);
 }
