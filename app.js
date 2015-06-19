@@ -4,34 +4,48 @@ var columns = ["a","b","c","d","e","f","g","h","i","j","k","l"];
 var colActive = 0;
 
 var available = [true, false, false, false, false, false, false, false, false, false, false, false];
+var busy = [false, false, false, false, false, false, false, false, false, false, false, false];
 
+
+//emit to start stream
 if (search != null) {
 	socket.emit('enter', search);
 }
 
+//listen for tweets
 socket.on('tweetStream', function(tweets) {
+
+	//push tweets to an array
 	tweetLog.push(tweets);
 
+	//grab the first tweet
 	var grabTweet = tweetLog[0].toString();
 
-	if (available[colActive]){
+	//if the active column is available
+	if (available[colActive] && busy[colActive] === false){
+
+		//this is the variable used for formatting the columns
 		var colSelect = colActive;
 	}
 
+	//for moving the active column to the next
 	if(colSelect < 11) {
 		colActive++;
 	}
 
-	if (colSelect <= 11 && available[colSelect]) {
+	//if column is valid
+	if (colSelect <= 11 && available[colSelect] && busy[colSelect] === false) {
 
-		//the revolving doors of availability lol
-		available[colSelect] = false;
-		
+		//change column to busy
+		busy[colSelect] = true;	
 
 		//check if column is even or odd
 		if (colSelect % 2 == 0 && colSelect <= 10) {
 
+			//make the next column available
 			available[colActive] = true;
+
+			//remove the current tweet from array
 			tweetLog.splice(0, 1);
 		
 			//makeshift loop that I can control
@@ -41,7 +55,8 @@ socket.on('tweetStream', function(tweets) {
 
 				//when it comes to the last char of the tweet it stops
 				if (i >= grabTweet.length) {
-					clearInterval(timer);	
+					clearInterval(timer);
+					busy[colSelect] = false;	
 				};
 
 				//grab the chars one at a time from the tweet
@@ -63,7 +78,7 @@ socket.on('tweetStream', function(tweets) {
 				var tracker = document.getElementById(columns[colSelect]);
 				tracker.scrollTop = tracker.scrollHeight;
 
-				//loop interval time
+				//loop interval time aka "animation time"
 			}, 250);
 		}
 
@@ -71,7 +86,10 @@ socket.on('tweetStream', function(tweets) {
 		//the idea is that every other column displays in opposite direction
 		if (colSelect % 2 != 0 && colSelect <=10) {
 
+			//make the next column available
 			available[colActive] = true;
+			
+			//remove the current tweet from array
 			tweetLog.splice(0, 1);
 
 			//makeshift loop that I can control
@@ -81,7 +99,8 @@ socket.on('tweetStream', function(tweets) {
 
 				//when it comes to the last char of the tweet it stops
 				if (i2 >= grabTweet.length) {
-					clearInterval(timer2);	
+					clearInterval(timer2);
+					busy[colSelect] = false;	
 				};
 
 				//grab the chars one at a time from the tweet
@@ -105,16 +124,17 @@ socket.on('tweetStream', function(tweets) {
 				var tracker2 = document.getElementById(columns[colSelect]);
 				tracker2.scrollTop = !tracker2.scrollHeight;
 
-				//loop interval time
+				//loop interval time aka "animation time"
 			}, 250);
 		}
 
+		//for the last column
 		if (colSelect > 10) {
 
-			available[colSelect] = false;
+			//remove the current tweet from the array
 			tweetLog.splice(0, 1);
 
-		//makeshift loop that I can control
+			//makeshift loop that I can control
 			var i3 = 0;
 
 			var timer3 = setInterval(function(){
@@ -122,8 +142,8 @@ socket.on('tweetStream', function(tweets) {
 				//when it comes to the last char of the tweet it stops
 				if (i3 >= grabTweet.length) {
 					clearInterval(timer3);
-					available[0] = true;
-					colActive = 0;	
+					busy[colSelect] = false;
+					colActive = 0;
 				};
 
 				//grab the chars one at a time from the tweet
@@ -147,7 +167,7 @@ socket.on('tweetStream', function(tweets) {
 				var tracker3 = document.getElementById(columns[colSelect]);
 				tracker3.scrollTop = !tracker3.scrollHeight;
 
-				//loop interval time
+				//loop interval time aka "animation time"
 			}, 250);
 		}
 

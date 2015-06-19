@@ -22,14 +22,18 @@ io.on('connection', function(socket){
  
   console.log("connection");
 
+  //recieve search criteria
   socket.on('enter', function(search) {
 
+  	//set up twitter stream using user-provided search criteria
   	twitter.stream('statuses/filter', {track: search}, function(stream){
 
+  	//error check
 	stream.on('error', function(error){
 		throw error;
 	});
 
+	//log and send tweet with formatting
 	stream.on('data', function(data){
 		console.log(data.text);
 		socket.emit('tweetStream', data.text + " *** ");
