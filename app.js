@@ -14,26 +14,25 @@ socket.on('tweetStream', function(tweets) {
 
 	var grabTweet = tweetLog[0].toString();
 
-	var colSelect = colActive;
+	if (available[colActive]){
+		var colSelect = colActive;
+	}
 
 	if(colSelect < 11) {
 		colActive++;
 	}
 
-	else {
-		colActive = 0;
-	}
-
 	if (colSelect <= 11 && available[colSelect]) {
 
 		//the revolving doors of availability lol
-		available[colSelect] = !available[colSelect];
+		available[colSelect] = false;
 		
 
 		//check if column is even or odd
 		if (colSelect % 2 == 0 && colSelect <= 10) {
 
-			available[colActive] = !available[colActive];
+			available[colActive] = true;
+			tweetLog.splice(0, 1);
 		
 			//makeshift loop that I can control
 			var i = 0;
@@ -65,14 +64,15 @@ socket.on('tweetStream', function(tweets) {
 				tracker.scrollTop = tracker.scrollHeight;
 
 				//loop interval time
-			}, 100);
+			}, 250);
 		}
 
 		//for every other column, same as above, but posts characters in reverse order
 		//the idea is that every other column displays in opposite direction
 		if (colSelect % 2 != 0 && colSelect <=10) {
 
-			available[colActive] = !available[colActive];
+			available[colActive] = true;
+			tweetLog.splice(0, 1);
 
 			//makeshift loop that I can control
 			var i2 = 0;
@@ -106,10 +106,14 @@ socket.on('tweetStream', function(tweets) {
 				tracker2.scrollTop = !tracker2.scrollHeight;
 
 				//loop interval time
-			}, 100);
+			}, 250);
 		}
 
 		if (colSelect > 10) {
+
+			available[colSelect] = false;
+			tweetLog.splice(0, 1);
+
 		//makeshift loop that I can control
 			var i3 = 0;
 
@@ -118,7 +122,8 @@ socket.on('tweetStream', function(tweets) {
 				//when it comes to the last char of the tweet it stops
 				if (i3 >= grabTweet.length) {
 					clearInterval(timer3);
-					available[colActive] = !available[colActive];	
+					available[0] = true;
+					colActive = 0;	
 				};
 
 				//grab the chars one at a time from the tweet
@@ -143,7 +148,7 @@ socket.on('tweetStream', function(tweets) {
 				tracker3.scrollTop = !tracker3.scrollHeight;
 
 				//loop interval time
-			}, 100);
+			}, 250);
 		}
 
 	}
