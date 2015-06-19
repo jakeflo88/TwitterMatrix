@@ -4,6 +4,8 @@ var columns = ["a","b","c","d","e","f","g","h","i","j","k","l"];
 var colActive = 0;
 
 var available = [true, false, false, false, false, false, false, false, false, false, false, false];
+var busy = [false, false, false, false, false, false, false, false, false, false, false, false];
+
 
 //emit to start stream
 if (search != null) {
@@ -20,7 +22,7 @@ socket.on('tweetStream', function(tweets) {
 	var grabTweet = tweetLog[0].toString();
 
 	//if the active column is available
-	if (available[colActive]){
+	if (available[colActive] && busy[colActive] === false){
 
 		//this is the variable used for formatting the columns
 		var colSelect = colActive;
@@ -32,11 +34,10 @@ socket.on('tweetStream', function(tweets) {
 	}
 
 	//if column is valid
-	if (colSelect <= 11 && available[colSelect]) {
+	if (colSelect <= 11 && available[colSelect] && busy[colSelect] === false) {
 
-		//change the availability of the the working column
-		available[colSelect] = false;
-		
+		//change column to busy
+		busy[colSelect] = true;	
 
 		//check if column is even or odd
 		if (colSelect % 2 == 0 && colSelect <= 10) {
@@ -54,7 +55,8 @@ socket.on('tweetStream', function(tweets) {
 
 				//when it comes to the last char of the tweet it stops
 				if (i >= grabTweet.length) {
-					clearInterval(timer);	
+					clearInterval(timer);
+					busy[colSelect] = false;	
 				};
 
 				//grab the chars one at a time from the tweet
@@ -97,7 +99,8 @@ socket.on('tweetStream', function(tweets) {
 
 				//when it comes to the last char of the tweet it stops
 				if (i2 >= grabTweet.length) {
-					clearInterval(timer2);	
+					clearInterval(timer2);
+					busy[colSelect] = false;	
 				};
 
 				//grab the chars one at a time from the tweet
@@ -139,12 +142,8 @@ socket.on('tweetStream', function(tweets) {
 				//when it comes to the last char of the tweet it stops
 				if (i3 >= grabTweet.length) {
 					clearInterval(timer3);
-
-					//make the first column available again
-					available[0] = true;
-
-					//make the first column active again to be selected
-					colActive = 0;	
+					busy[colSelect] = false;
+					colActive = 0;
 				};
 
 				//grab the chars one at a time from the tweet
