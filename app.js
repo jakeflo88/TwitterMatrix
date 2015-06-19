@@ -3,7 +3,7 @@ var tweetLog = [];
 var columns = ["a","b","c","d","e","f","g","h","i","j","k","l"];
 var colActive = 0;
 
-var available = [true, false, false, false, false, false, false, false, false, false, false, false];
+
 var busy = [false, false, false, false, false, false, false, false, false, false, false, false];
 
 
@@ -22,7 +22,7 @@ socket.on('tweetStream', function(tweets) {
 	var grabTweet = tweetLog[0].toString();
 
 	//if the active column is available
-	if (available[colActive] && busy[colActive] === false){
+	if (busy[colActive] === false){
 
 		//this is the variable used for formatting the columns
 		var colSelect = colActive;
@@ -34,16 +34,13 @@ socket.on('tweetStream', function(tweets) {
 	}
 
 	//if column is valid
-	if (colSelect <= 11 && available[colSelect] && busy[colSelect] === false) {
+	if (colSelect <= 11 && busy[colSelect] === false) {
 
 		//change column to busy
 		busy[colSelect] = true;	
 
 		//check if column is even or odd
 		if (colSelect % 2 == 0 && colSelect <= 10) {
-
-			//make the next column available
-			available[colActive] = true;
 
 			//remove the current tweet from array
 			tweetLog.splice(0, 1);
@@ -85,9 +82,6 @@ socket.on('tweetStream', function(tweets) {
 		//for every other column, same as above, but posts characters in reverse order
 		//the idea is that every other column displays in opposite direction
 		if (colSelect % 2 != 0 && colSelect <=10) {
-
-			//make the next column available
-			available[colActive] = true;
 			
 			//remove the current tweet from array
 			tweetLog.splice(0, 1);
