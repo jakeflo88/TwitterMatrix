@@ -13,3 +13,5 @@ Things to fix or possibly add:
 -get set up on github pages
 
 -get set up on digital ocean
+
+--keeping the streak alive
