@@ -15,3 +15,6 @@ Things to fix or possibly add:
 -get set up on digital ocean
 
 --keeping the streak alive
+
+-figure out why columns continue to shift down a few characters after the asterix. Shouldn't
+they just stop after " *** "?
